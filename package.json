@@ -1,4 +1,8 @@
 {
+  "name": "server-test-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.19.0",
     "cloudinary": "^1.24.0",
