@@ -1,10 +1,10 @@
 const { cloudinary } = require("./utils/cloudinary");
 const express=require("express");
 require("dotenv").config();
-const admin = require("firebase-admin");
 const MongoClient = require("mongodb").MongoClient;
 const bodyParser = require("body-parser");
-const cors = require("cors");
+const cors=require("cors");
+const admin = require("firebase-admin");
 const ObjectId = require("mongodb").ObjectId;
 
 const app = express();
