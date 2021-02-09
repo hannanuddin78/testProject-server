@@ -3,8 +3,7 @@ const express=require("express");
 require("dotenv").config();
 const MongoClient = require("mongodb").MongoClient;
 const bodyParser = require("body-parser");
-const cors=require("cors");
-const admin = require("firebase-admin");
+const cors = require("cors");
 const ObjectId = require("mongodb").ObjectId;
 
 const app = express();
@@ -17,13 +16,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.ugsfy.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
-
-var serviceAccount = require("./privateKey/privatekey.json");
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://project-test-me.firebaseio.com",
-});
 
 app.post("/api/upload", async (req, res) => {
   try {
@@ -56,24 +48,9 @@ client.connect((err) => {
   });
 
   app.get("/allProducts", (req, res) => {
-    const bearerToken = req.headers.authorization;
-    if (bearerToken && bearerToken.startsWith("Bearer ")) {
-      const idToken = bearerToken.split(" ")[1];
-      // idToken comes from the client app
-      admin
-        .auth()
-        .verifyIdToken(idToken)
-        .then(function (decodedToken) {
-          productCollection.find({}).toArray((err, documents) => {
-            res.send(documents);
-          });
-        })
-        .catch(function (error) {
-          res.send("un-authorized access");
-        });
-    } else {
-      res.send("un-authorized access");
-    }
+    productCollection.find({}).toArray((err, documents) => {
+      res.send(documents);
+    });
   });
 
   app.patch("/updateProduct/:id", (req, res) => {
@@ -143,24 +120,9 @@ client.connect((err) => {
   });
 
   app.get("/allOrders", (req, res) => {
-    const orderToken = req.headers.authorization;
-    if (orderToken && orderToken.startsWith("Bearer ")) {
-      const idToken = orderToken.split(" ")[1];
-      // idToken comes from the client app
-      admin
-        .auth()
-        .verifyIdToken(idToken)
-        .then(function (decodedToken) {
-          checkoutCollection.find({}).toArray((err, documents) => {
-            res.send(documents);
-          });
-        })
-        .catch(function (error) {
-          res.send("un-authorized access");
-        });
-    } else {
-      res.send("un-authorized access");
-    }
+    checkoutCollection.find({}).toArray((err, documents) => {
+      res.send(documents);
+    });
   });
 
   app.patch("/updateStatus/:id", (req, res) => {
@@ -185,29 +147,9 @@ client.connect((err) => {
   });
 
   app.get("/SeePromoCode", (req, res) => {
-    const codeToken = req.headers.authorization;
-    if (codeToken && codeToken.startsWith("Bearer ")) {
-      const idToken = codeToken.split(" ")[1];
-      // idToken comes from the client app
-      admin
-        .auth()
-        .verifyIdToken(idToken)
-        .then(function (decodedToken) {
-          let uid = decodedToken.uid;
-          if (uid) {
-            promoCodeCollection.find({}).toArray((err, documents) => {
-              res.send(documents);
-            });
-          } else {
-            res.send("un-authorized access");
-          }
-        })
-        .catch(function (error) {
-          res.send("un-authorized access");
-        });
-    } else {
-      res.send("un-authorized access");
-    }
+    promoCodeCollection.find({}).toArray((err, documents) => {
+      res.send(documents);
+    });
   });
 
   app.patch("/updatePromo/:id", (req, res) => {
